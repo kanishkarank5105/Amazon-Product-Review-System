@@ -1,0 +1,351 @@
+/* =========================================================
+   Sentiment Analyzer — editorial / warm-paper aesthetic
+   ========================================================= */
+
+:root {
+    --bg: #f4efe6;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --paper: #fbf8f1;
+    --accent: #d2492a;
+    /* burnt orange */
+    --positive: #2f6b3a;
+    --negative: #b53030;
+    --neutral: #7a6f55;
+    --border: #1a1a1a;
+    --shadow: 6px 6px 0 #1a1a1a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Fraunces', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+
+/* subtle paper grain */
+
+.grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: radial-gradient(#000 1px, transparent 1px), radial-gradient(#000 1px, transparent 1px);
+    background-size: 4px 4px, 6px 6px;
+    background-position: 0 0, 2px 2px;
+    z-index: 0;
+}
+
+
+/* ---------- Hero ---------- */
+
+.hero {
+    padding: 80px 6vw 40px;
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+}
+
+.accent {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 600;
+}
+
+.hero-sub {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    max-width: 560px;
+    line-height: 1.5;
+}
+
+
+/* ---------- Container ---------- */
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 6vw 80px;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ---------- Form ---------- */
+
+.review-form {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 32px;
+}
+
+.form-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border);
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    padding: 8px 0 14px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.5;
+}
+
+textarea:focus {
+    border-bottom-color: var(--accent);
+}
+
+textarea::placeholder {
+    color: #b5ab97;
+    font-style: italic;
+}
+
+.submit-btn {
+    margin-top: 22px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 14px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.submit-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translate(-2px, -2px);
+}
+
+.arrow {
+    transition: transform 0.2s ease;
+}
+
+.submit-btn:hover .arrow {
+    transform: translateX(4px);
+}
+
+
+/* ---------- Result card ---------- */
+
+.result-card {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 32px;
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card.positive {
+    border-left: 10px solid var(--positive);
+}
+
+.result-card.negative {
+    border-left: 10px solid var(--negative);
+}
+
+.result-card.neutral {
+    border-left: 10px solid var(--neutral);
+}
+
+.result-card.error {
+    border-left: 10px solid #c08400;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px dashed #d9d2c1;
+}
+
+.result-row:last-of-type {
+    border-bottom: none;
+}
+
+.result-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+.result-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.result-value.big {
+    font-size: 2rem;
+    font-style: italic;
+}
+
+.result-value.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+}
+
+.result-card.positive .result-value.big {
+    color: var(--positive);
+}
+
+.result-card.negative .result-value.big {
+    color: var(--negative);
+}
+
+.confidence-bar {
+    margin-top: 18px;
+    height: 10px;
+    background: #e8e0cd;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.6s cubic-bezier(.2, .8, .2, 1);
+}
+
+.result-card.positive .confidence-fill {
+    background: var(--positive);
+}
+
+.result-card.negative .confidence-fill {
+    background: var(--negative);
+}
+
+.result-label {
+    font-size: 1.4rem;
+    color: var(--ink);
+}
+
+
+/* ---------- Examples ---------- */
+
+.examples h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+}
+
+.example-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.chip {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    padding: 8px 16px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.chip:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+
+/* ---------- Footer ---------- */
+
+.footer {
+    text-align: center;
+    padding: 30px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-top: 1px solid #d9d2c1;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 640px) {
+    .hero {
+        padding: 50px 6vw 30px;
+    }
+    .hero-title {
+        font-size: 2.6rem;
+    }
+    .review-form,
+    .result-card {
+        padding: 20px;
+    }
+    .result-value.big {
+        font-size: 1.6rem;
+    }
+}

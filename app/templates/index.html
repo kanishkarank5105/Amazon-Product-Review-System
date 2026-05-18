@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Review Sentiment Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="grain"></div>
+
+    <header class="hero">
+        <div class="hero-tag">v1.0 — sentiment engine</div>
+        <h1 class="hero-title">
+            What does the<br>
+            <span class="accent">review</span> really say?
+        </h1>
+        <p class="hero-sub">
+            Paste an Amazon product review. The model returns a sentiment label
+            (positive / negative) with a confidence score.
+        </p>
+    </header>
+
+    <main class="container">
+        <form action="/predict" method="POST" class="review-form">
+            <label for="review" class="form-label">REVIEW TEXT</label>
+            <textarea
+                id="review"
+                name="review"
+                rows="6"
+                placeholder="e.g. The battery life is incredible and the build quality feels premium…"
+                required>{{ review }}</textarea>
+            <button type="submit" class="submit-btn">
+                Analyze sentiment <span class="arrow">→</span>
+            </button>
+        </form>
+
+        {% if result %}
+            <section class="result-card
+                {% if result.error %}error
+                {% elif result.label == 'Positive' %}positive
+                {% elif result.label == 'Negative' %}negative
+                {% else %}neutral{% endif %}">
+
+                {% if result.error %}
+                    <h2 class="result-label">⚠ {{ result.error }}</h2>
+                {% else %}
+                    <div class="result-row">
+                        <span class="result-key">Sentiment</span>
+                        <span class="result-value big">{{ result.label }}</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-key">Confidence</span>
+                        <span class="result-value">
+                            {{ (result.confidence * 100) | round(2) }}%
+                        </span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-key">Model</span>
+                        <span class="result-value mono">{{ result.model }}</span>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-fill"
+                             style="width: {{ (result.confidence * 100) | round(2) }}%"></div>
+                    </div>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        <section class="examples">
+            <h3>Try an example</h3>
+            <div class="example-chips">
+                <button class="chip" type="button"
+                        onclick="fillExample('Absolutely love this! Worth every penny.')">
+                    👍 Positive
+                </button>
+                <button class="chip" type="button"
+                        onclick="fillExample('Broke after one week. Total waste of money.')">
+                    👎 Negative
+                </button>
+                <button class="chip" type="button"
+                        onclick="fillExample('Works as described, nothing exceptional but does the job.')">
+                    🤔 Mixed
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>Sentiment Analysis · TF-IDF + Logistic Regression / DistilBERT</span>
+    </footer>
+
+    <script>
+        function fillExample(text) {
+            document.getElementById('review').value = text;
+            document.getElementById('review').focus();
+        }
+    </script>
+</body>
+</html>
